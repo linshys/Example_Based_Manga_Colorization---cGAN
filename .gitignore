@@ -1,0 +1,20 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Debug file
+datacheck.py
+test_gray2color.py
+val.py
+
+experiments/
+misc/
+results/
+test_datasets/*
+train_datasets/
+training_logs/
