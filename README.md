@@ -2,9 +2,9 @@
 
 An amazing manga colorization project 
 
-You can colorize gray manga or character sketch using any reference image you want, this model will faithfully retain the color features and transfer them to your manga. This is useful when you wish the color of the characters' hair or clothes to be consistent.
+You can colorize gray manga or character sketches using any reference image you want, this model will faithfully retain the color features and transfer them to your manga. This is useful when you wish the color of the character's hair or clothes to be consistent.
 
-If project is helpful, please leave a ⭐ this repo. best luck, my friend 😊 <br>
+If the project is helpful, please leave a ⭐ this repo. best luck, my friend 😊 <br>
 
 ## Overview
 <p align="left">
@@ -15,7 +15,7 @@ It's basically a cGAN(Conditional Generative Adversarial Network) architecture.
 
 ### Generator 
 
-Generator is divided into two parts. `Color Embedding Layer` consists of part of pretrained VGG19 net and a MLP(Multilayer Perceptron), which is used to extract `color embedding` from reference image(for training, it's preprocessed Ground Truth Image). Another part is a U-net like network. The encoder layer extract `content enbedding` from gray input image(only contains L-channel information), and the decoder layer reconstruct image with `color embedding` through PFFB(Progressive Feature Formalization Block) and output the ab_channel information.
+Generator is divided into two parts. `Color Embedding Layer` consists of part of pretrained VGG19 net and an MLP(Multilayer Perceptron), which is used to extract `color embedding` from reference image(for training, its preprocessed Ground Truth Image). Another part is a U-net-like network. The encoder layer extract `content embedding from gray input image(only contains L-channel information), and the decoder layer reconstructs the image with `color embedding` through PFFB(Progressive Feature Formalization Block) and outputs the ab_channel information.
 
 <p align="left">
   <img src="./assets/PFFB.png">
@@ -29,15 +29,15 @@ Generator is divided into two parts. `Color Embedding Layer` consists of part of
     </div>
 </center>
 
-The figure shows how PFFB works. It generates filter by applying color embedding, and then convolving with content features. Check this [paper](https://arxiv.org/abs/2106.08017) for details. 
+The figure shows how PFFB works. It generates a filter by applying color embedding, and then convolving with content features. Check this [paper](https://arxiv.org/abs/2106.08017) for details. 
 
 ### Discriminator 
 
-Discriminator is a PatchGAN, referring to [pix2pix](https://arxiv.org/abs/1611.07004v3). The difference is that there are two conditions used for input. One is gray image waiting for colorization, and one is reference image providing color information.
+Discriminator is a PatchGAN, referring to [pix2pix](https://arxiv.org/abs/1611.07004v3). The difference is that there are two conditions used for input. One is the gray image waiting for colorization, and one is the reference image providing color information.
 
 ### Loss
 
-There are three losses in total, `L1 loss`, `perceptual loss` produced by pretrained vgg19 and `adversarial loss` produced by discriminator. The ratio is `1 : 0.1 : 0.01`.
+There are three losses in total, `L1 loss`, `perceptual loss` produced by pretrained vgg19, and `adversarial loss` produced by discriminator. The ratio is `1: 0.1: 0.01`.
 
 ### Pipeline 
 
@@ -75,7 +75,7 @@ There are three losses in total, `L1 loss`, `perceptual loss` produced by pretra
 
 ## Dependencies and Installation
 
-1. Clone this github repo. 
+1. Clone this GitHub repo. 
     ```
     git clone https://github.com/linSensiGit/Example_Based_Manga_Colorization---cGAN.git
     cd Example_Based_Manga_Colorization---cGAN
@@ -109,13 +109,13 @@ Once you've set up the environment, several things need to be done before colori
 
 ### Prepare pretrained models
 
-1. Download generator. I have trained two generator, for [gray manga](https://drive.google.com/file/d/11RQGvBKySEtRcBdYD8O5ZLb54jB7SAgN/view?usp=drive_link) colorization and [sketch](https://drive.google.com/file/d/1I4XwOYIGAoQwMOicknZl0s6AWcwpARmR/view?usp=drive_link) colorization. Choose what you need.
+1. Download generator. I have trained two generators, for [gray manga](https://drive.google.com/file/d/11RQGvBKySEtRcBdYD8O5ZLb54jB7SAgN/view?usp=drive_link) colorization and [sketch](https://drive.google.com/file/d/1I4XwOYIGAoQwMOicknZl0s6AWcwpARmR/view?usp=drive_link) colorization. Choose what you need.
 
 2. Download [VGG model](https://drive.google.com/file/d/1S7t3mD-tznEUrMmq5bRsLZk4fkN24QSV/view?usp=drive_link) , it's part of generator.
 
 3. Download discriminator, for training [gray manga](https://drive.google.com/file/d/1DHHE9um_xOm0brTpbHb_R7K7J4mn37FS/view?usp=drive_link) colorization and [sketch](https://drive.google.com/file/d/1WgIPYY4b4GcpHW9EWFrFoTxL9SlilQbN/view?usp=drive_link) colorization. (optional)
 
-4. Put the pretrained model in correct directory:
+4. Put the pretrained model in the correct directory:
 
    ```
    Colorful-Manga-GAN
@@ -124,38 +124,38 @@ Once you've set up the environment, several things need to be done before colori
       			|- xxx000_gray.pt
           	|- Color2Manga_sketch
           		|- xxx000_sketch.pt
-           |- Discriminator
-               |- xxx000_d.pt
+           	|- Discriminator
+               		|- xxx000_d.pt
           	|- VGG19
           		|- vgg19-dcbb9e9d.pth
    ```
 
 ### Quick test
 
-I have collected some test datasets which contains manga pages and corresponding reference images. You can check it in the path `./test_datasets`. When you use the file `inference.py` to test, you may need to edit the input file path or pretrained weights path in this file.
+I have collected some test datasets which contain manga pages and corresponding reference images. You can check it in the path `./test_datasets`. When you use the file `inference.py` to test, you may need to edit the input file path or pretrained weights path in this file.
 
 ```
 python inference.py
 
-# if you don't want to segment you manga
+# If you don't want to segment your manga
 python inference.py -ne
 ```
-Initially, `Manga-Panel-Extractor` will segment manga page into panels.
+Initially, `Manga-Panel-Extractor` will segment the manga page into panels.
 
-Then follow the instructions in console and you will get the colorized image. 
+Then follow the instructions in the console and you will get the colorized image. 
 
 ## Train your Own Model
 ###  Prepare Datasets
 
 There are three datasets I used to train the model.
 
-For gray model, [Anime Face Dataset](https://www.kaggle.com/datasets/scribbless/another-anime-face-dataset) and Tagged [Anime Illustrations Dataset](https://www.kaggle.com/datasets/mylesoneill/tagged-anime-illustrations) are used. And I only use `danbooru-images` folder in second Dataset. 
+For gray model, [Anime Face Dataset](https://www.kaggle.com/datasets/scribbless/another-anime-face-dataset) and Tagged [Anime Illustrations Dataset](https://www.kaggle.com/datasets/mylesoneill/tagged-anime-illustrations) are used. And I only use `danbooru-images` folder in the second Dataset. 
 
 For sketch model, [Anime Sketch Colorization Pair Dataset](https://www.kaggle.com/datasets/ktaebum/anime-sketch-colorization-pair) is used.
 
 All the datasets are from [Kaggle](https://www.kaggle.com/).
 
-Follow instructions are based on my dataset, but feel free to use you own dataset if you like.
+Follow instructions are based on my dataset, but feel free to use your own dataset if you like.
 
 ### Preprocess training data
 
@@ -170,7 +170,7 @@ If you are using ` Anime Sketch Colorization Pair` dataset :
 python prepare_data_sketch.py
 ```
 
-Several argument needed to be assigned :
+Several arguments needed to be assigned :
 
 ```
 usage: prepare_data.py [-h] [--out OUT] [--size SIZE] [--n_worker N_WORKER]
@@ -182,11 +182,11 @@ optional arguments:
   -h, --help           	show this help message and exit
   --out OUT				the path to save generated lmdb
   --size SIZE			compressed image size (128, 256, 512, 1024) alternative
-  --n_worker N_WORKER 	The number of threads, depends on your cpu
+  --n_worker N_WORKER 	The number of threads, depends on your CPU
   --resample RESAMPLE	
 ```
 
-For instance, you can run command like this: 
+For instance, you can run the command like this: 
 
 ```
 python prepare_data.py --out ../train_datasets/Sketch_train_lmdb --n_worker 20 --size 256 E:/Dataset/animefaces256cleaner
@@ -200,13 +200,13 @@ There are four scripts in total for training
 
 `train_disc` —— train only discriminator
 
-`train_all_gray.py`—— train both generator and discriminator, under usual dataset
+`train_all_gray.py`—— train both generator and discriminator, under the usual dataset
 
 `train_all_sketch.py`—— train both generator and discriminator, under sketch pair dataset specific 
 
 
 
-All of these scripts share the similar commands to drive:
+All of these scripts share similar commands to drive:
 
 ```
 usage: train_all_gray.py [-h] [--datasets DATASETS] [--iter ITER]
@@ -229,11 +229,11 @@ optional arguments:
   --local_rank LOCAL_RANK
 ```
 
-There may be slight difference, you could check code for more details.
+There may be a slight difference, you could check the code for more details.
 
 
 
-For instance, you can run command like this: 
+For instance, you can run the command like this: 
 
 ```
 python train_all_gray.py --batch 8 --experiment_name Color2Manga_sketch --ckpt experiments/Color2Manga_sketch/078000.pt --datasets ./train_datasets/Sketch_train_lmdb --ckpt_disc experiments/Discriminator/078000_d.pt
@@ -243,11 +243,11 @@ python train_all_gray.py --batch 8 --experiment_name Color2Manga_sketch --ckpt e
 - [ ] Add SR model instead of directly interpolate upscaling
 - [ ] Optimize the generator network(adding L-channel information to output which is essential for colorize sketch)
 - [ ] Better developed manga-panel-extractor(current segmentation is not precise enough)
-- [ ] Develop a front UI and add color hint so that user could adjust color of specific area 
+- [ ] Develop a front UI and add color hint so that users could adjust the color of a specific area 
 
 ## 😁Contact
 
-If you have any question, please feel free to contact me via `j2539876356@163.com`
+If you have any questions, please feel free to contact me via `j2539876356@163.com`
 
 ## 🙌 Acknowledgement
 Based on https://github.com/zhaohengyuan1/Color2Embed
