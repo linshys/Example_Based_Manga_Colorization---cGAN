@@ -7,7 +7,6 @@ You can colorize gray manga or character sketch using any reference image you wa
 If project is helpful, please leave a ⭐ this repo. best luck, my friend 😊 <br>
 
 ## Overview
----------
 <p align="left">
   <img src="./assets/network.png">
 </p>
@@ -51,9 +50,6 @@ There are three losses in total, `L1 loss`, `perceptual loss` produced by pretra
 - c. Concatenate all colorized panels into original format.
 
 ## Results
-
----------
-
 ### Gray model
 
 | Original    |                          Reference                           | Colorization |
@@ -149,9 +145,6 @@ Initially, `Manga-Panel-Extractor` will segment manga page into panels.
 Then follow the instructions in console and you will get the colorized image. 
 
 ## Train your Own Model
-
---------
-
 ###  Prepare Datasets
 
 There are three datasets I used to train the model.
@@ -247,9 +240,6 @@ python train_all_gray.py --batch 8 --experiment_name Color2Manga_sketch --ckpt e
 ```
 
 ## Work in Progress
-
-----------
-
 - [ ] Add SR model instead of directly interpolate upscaling
 - [ ] Optimize the generator network(adding L-channel information to output which is essential for colorize sketch)
 - [ ] Better developed manga-panel-extractor(current segmentation is not precise enough)
@@ -257,21 +247,14 @@ python train_all_gray.py --batch 8 --experiment_name Color2Manga_sketch --ckpt e
 
 ## 😁Contact
 
---------
-
 If you have any question, please feel free to contact me via `j2539876356@163.com`
 
 ## 🙌 Acknowledgement
-
-----------
-
 Based on https://github.com/zhaohengyuan1/Color2Embed
 
 Thx https://github.com/pvnieo/Manga-Panel-Extractor
 
 ## Reference
-
---------
 
 [1] Zhao, Hengyuan et al. “Color2Embed: Fast Exemplar-Based Image Colorization using Color Embeddings.” (2021).
 
