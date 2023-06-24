@@ -88,7 +88,7 @@ class SDFT(nn.Module):
         weight = self.scale * self.weight * style
         # demodulation
         demod = torch.rsqrt(weight.pow(2).sum([2, 3, 4]) + 1e-8)
-        weight = weight * demod.view(B, C, 1, 1, 1)         #求算数平均和，用来归一化，防止核中梯度爆炸
+        weight = weight * demod.view(B, C, 1, 1, 1)
 
         weight = weight.view(
             B * C, C, self.kernel_size, self.kernel_size

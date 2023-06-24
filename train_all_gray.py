@@ -1,6 +1,7 @@
 import argparse
 
 import os
+import re
 
 import numpy as np
 from PIL import Image
@@ -157,10 +158,6 @@ def train(
         # Adversarial ground truths
         valid = Variable(Tensor(np.ones((img.size(0), *patch))), requires_grad=False)
         fake = Variable(Tensor(np.zeros((img.size(0), *patch))), requires_grad=False)
-        # ima =  img_ref.numpy()
-        # ima = ima[0].astype('uint8')
-        # ima =  Image.fromarray(ima.transpose(1,2,0))
-        # ima.show()
 
         img = img.to(device)  # GT [B, 3, 256, 256]
         img_lab = img_lab.to(device)  # GT
@@ -289,43 +286,44 @@ def train(
                 disc_val_all = 0
                 count = 0
 
-            if i % 250 == 0:
-                with torch.no_grad():
-                    colorEncoder.eval()
-                    colorUNet.eval()
-
-                    imgsize = 256
-                    for inum in range(15):
-                        val_img_path = 'test_datasets/val_Manga/in%d.jpg' % (inum + 1)
-                        val_ref_path = 'test_datasets/val_Manga/ref%d.jpg' % (inum + 1)
-                        # val_img_path = 'test_datasets/val_daytime/day_sample/in%d.jpg'%(inum+1)
-                        # val_ref_path = 'test_datasets/val_daytime/night_sample/dark4.jpg'
-                        out_name = 'in%d_ref%d.png' % (inum + 1, inum + 1)
-                        val_img = Image.open(val_img_path).convert("RGB").resize((imgsize, imgsize))
-                        val_img_ref = Image.open(val_ref_path).convert("RGB").resize((imgsize, imgsize))
-                        val_img, val_img_lab = preprocessing(val_img)
-                        val_img_ref, val_img_ref_lab = preprocessing(val_img_ref)
-
-                        # val_img = val_img.to(device)
-                        val_img_lab = val_img_lab.to(device)
-                        val_img_ref = val_img_ref.to(device)
-                        # val_img_ref_lab = val_img_ref_lab.to(device)
-
-                        val_img_l = val_img_lab[:, :1, :, :] / 50.  # [-1, 1]
-                        # val_img_ref_ab = val_img_ref_lab[:,1:,:,:] / 110. # [-1, 1]
-
-                        ref_color_vector = colorEncoder(val_img_ref / 255.)  # [0, 1]
-                        fake_swap_ab = colorUNet((val_img_l, ref_color_vector))
-
-                        fake_img = torch.cat((val_img_l * 50, fake_swap_ab * 110), 1)
-
-                        sample = np.concatenate(
-                            (tensor2numpy(val_img), tensor2numpy(val_img_ref), Lab2RGB_out(fake_img)), 1)
-
-                        out_dir = 'training_logs/%s/%06d' % (args.experiment_name, i)
-                        mkdirss(out_dir)
-                        io.imsave('%s/%s' % (out_dir, out_name), sample.astype('uint8'))
-                        torch.cuda.empty_cache()
+            # this code is for model validation, you should prepare you own val dataset and edit code to use it
+            # if i % 250 == 0:
+            #     with torch.no_grad():
+            #         colorEncoder.eval()
+            #         colorUNet.eval()
+            #
+            #         imgsize = 256
+            #         for inum in range(15):
+            #             val_img_path = 'test_datasets/val_Manga/in%d.jpg' % (inum + 1)
+            #             val_ref_path = 'test_datasets/val_Manga/ref%d.jpg' % (inum + 1)
+            #             # val_img_path = 'test_datasets/val_daytime/day_sample/in%d.jpg'%(inum+1)
+            #             # val_ref_path = 'test_datasets/val_daytime/night_sample/dark4.jpg'
+            #             out_name = 'in%d_ref%d.png' % (inum + 1, inum + 1)
+            #             val_img = Image.open(val_img_path).convert("RGB").resize((imgsize, imgsize))
+            #             val_img_ref = Image.open(val_ref_path).convert("RGB").resize((imgsize, imgsize))
+            #             val_img, val_img_lab = preprocessing(val_img)
+            #             val_img_ref, val_img_ref_lab = preprocessing(val_img_ref)
+            #
+            #             # val_img = val_img.to(device)
+            #             val_img_lab = val_img_lab.to(device)
+            #             val_img_ref = val_img_ref.to(device)
+            #             # val_img_ref_lab = val_img_ref_lab.to(device)
+            #
+            #             val_img_l = val_img_lab[:, :1, :, :] / 50.  # [-1, 1]
+            #             # val_img_ref_ab = val_img_ref_lab[:,1:,:,:] / 110. # [-1, 1]
+            #
+            #             ref_color_vector = colorEncoder(val_img_ref / 255.)  # [0, 1]
+            #             fake_swap_ab = colorUNet((val_img_l, ref_color_vector))
+            #
+            #             fake_img = torch.cat((val_img_l * 50, fake_swap_ab * 110), 1)
+            #
+            #             sample = np.concatenate(
+            #                 (tensor2numpy(val_img), tensor2numpy(val_img_ref), Lab2RGB_out(fake_img)), 1)
+            #
+            #             out_dir = 'training_logs/%s/%06d' % (args.experiment_name, i)
+            #             mkdirss(out_dir)
+            #             io.imsave('%s/%s' % (out_dir, out_name), sample.astype('uint8'))
+            #             torch.cuda.empty_cache()
             if i % 2000 == 0:
                 out_dir_g = "experiments/%s" % (args.experiment_name)
                 mkdirss(out_dir_g)
@@ -336,7 +334,7 @@ def train(
                         "g_optim": g_optim.state_dict(),
                         "args": args,
                     },
-                    f"%s/{str(i).zfill(6)}.pt" % (out_dir_g),
+                    f"%s/{str(i).zfill(6)}_gray.pt" % (out_dir_g),
                 )
                 out_dir_d = "experiments/Discriminator"
                 mkdirss(out_dir_d)
@@ -403,8 +401,11 @@ if __name__ == "__main__":
 
         try:
             ckpt_name = os.path.basename(args.ckpt)
-            args.start_iter = int(os.path.splitext(ckpt_name)[0])
-
+            match = re.search(r'\d+', ckpt_name)
+            if match:
+                args.start_iter = int(match.group(0))
+            else:
+                args.start_iter = 0
         except ValueError:
             pass
 
@@ -423,8 +424,8 @@ if __name__ == "__main__":
     transform = transforms.Compose(
         [
             transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            transforms.RandomRotation(degrees=(0, 360))
+            # transforms.RandomVerticalFlip(),
+            transforms.RandomRotation(degrees=(-90, 90))
         ]
     )
 

@@ -16,5 +16,7 @@ experiments/
 misc/
 results/
 test_datasets/*
+!/test_datasets/gray_test
+!/test_datasets/sketch_test
 train_datasets/
 training_logs/

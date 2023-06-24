@@ -72,9 +72,11 @@ class MultiResolutionDataset(Dataset):
         # ima_a = Image.fromarray(ima_a)
         # ima_a.show()
 
+        # get the left color image
+        img_ref = img_src[:, :256]
         ## add gaussian noise
-        noise = np.random.uniform(-5, 5, np.shape(img_src))
-        img_ref = np.clip(np.array(img_src) + noise, 0, 255)
+        noise = np.random.uniform(-5, 5, np.shape(img_ref))
+        img_ref = np.clip(np.array(img_ref) + noise, 0, 255)
 
 
         img_ref = tps_transform(img_ref) # [0,255] uint8
@@ -83,15 +85,36 @@ class MultiResolutionDataset(Dataset):
         img_ref = Image.fromarray(img_ref)
         img_ref = np.array(self.transform(img_ref)) # [0,255] uint8
 
-        img_lab = Normalize(RGB2Lab(img_src)) # l [-50,50] ab [-128, 128]
+        img_lab = img_src[:, :256]
+        img_lab = Normalize(RGB2Lab(img_lab)) # l [-50,50] ab [-128, 128]
 
-        img = img_src.astype('float32') # [0,255] float32 RGB
+        img_lab_sketch = img_src[:, 256:]
+        img_lab_sketch = Normalize(RGB2Lab(img_lab_sketch)) # l [-50,50] ab [-128, 128]
+
+        img = img_src[:, :256].astype('float32') # [0,255] float32 RGB
         img_ref = img_ref.astype('float32') # [0,255] float32 RGB
+
+        # ima_a = img
+        # ima_a = ima_a.astype('uint8')
+        # ima_a = Image.fromarray(ima_a)
+        # ima_a.show()
+        #
+        # ima_a = img_ref
+        # ima_a = ima_a.astype('uint8')
+        # ima_a = Image.fromarray(ima_a)
+        # ima_a.show()
+        #
+        # ima_a = img_lab
+        # ima_a = ima_a.astype('uint8')
+        # ima_a = Image.fromarray(ima_a)
+        # ima_a.show()
+
 
         img = numpy2tensor(img)
         img_ref = numpy2tensor(img_ref) # [B, 3, 256, 256]
         img_lab = numpy2tensor(img_lab)
+        img_lab_sketch = numpy2tensor(img_lab_sketch)
 
-        return img, img_ref, img_lab
+        return img, img_ref, img_lab, img_lab_sketch
         
     

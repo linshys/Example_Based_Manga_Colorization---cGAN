@@ -96,6 +96,8 @@ class PanelExtractor:
             if np.sum(hist[50:200]) / np.sum(hist) < self.paper_th:
                 paperless_imgs.append(img)
 
+        if not paperless_imgs:
+            return imgs, [], []
         for i, img in tqdm(enumerate(paperless_imgs), desc="extracting panels"):
             panels, masks, panel_masks = self.generate_panels(img)
             name, ext = splitext(basename(image_list[i]))
@@ -127,7 +129,7 @@ class PanelExtractor:
         # out_imgs.append(f"D:\MyProject\Python\DL_learning\Manga-Panel-Extractor-master\out\in0_ref0.png")
         # out_imgs.append(f"D:\MyProject\Python\DL_learning\Manga-Panel-Extractor-master\out\in1_ref1.png")
         # out_imgs.append(f"D:\MyProject\Python\DL_learning\Manga-Panel-Extractor-master\out\in2_ref2.png")
-        for i in range(3):
+        for i in range(len(fake_imgs)):
             x, y, w, h = masks[i]
             # fake_img = io.imread(fake_imgs[i])
             # fake_img = np.array(fake_img)
@@ -140,6 +142,8 @@ class PanelExtractor:
         out_name = os.path.splitext(out_name)[0]
         out_img_path = os.path.join(out_folder,'color',f'{out_name}_color.png')
 
+        # show image
+        Image.fromarray(img).show()
         # save image
         folder_path = os.path.join(out_folder, 'color')
         if not os.path.exists(folder_path):
