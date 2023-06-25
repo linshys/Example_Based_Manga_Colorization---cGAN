@@ -16,13 +16,17 @@ It's basically a cGAN(Conditional Generative Adversarial Network) architecture.
 ### Generator 
 
 Generator is divided into two parts. 
+
 `Color Embedding Layer` consists of part of pretrained VGG19 net and an MLP(Multilayer Perceptron), which is used to extract `color embedding` from reference image(for training, its preprocessed Ground Truth Image). 
+
 Another part is a U-net-like network. The encoder layer extracts `content embedding` from gray input image(only contains L-channel information), and the decoder layer reconstructs the image with `color embedding` through PFFB(Progressive Feature Formalization Block) and outputs the ab_channel information.
 
 <p align="left">
   <img src="./assets/PFFB.png">
 </p>  
+
 The figure shows how PFFB works. 
+
 It generates a filter by applying color embedding, and then convolving with content features. The figure is from this [paper](https://arxiv.org/abs/2106.08017) and check it for more details. 
 
 ### Discriminator 
