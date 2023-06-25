@@ -244,7 +244,7 @@ python train_all_gray.py --batch 8 --experiment_name Color2Manga_sketch --ckpt e
 
 ## 😁Contact
 
-If you have any questions, please feel free to contact me via `j2539876356@163.com`
+If you have any questions, please feel free to contact me via `shizifeng0615@outlook.com`
 
 ## 🙌 Acknowledgement
 Based on https://github.com/zhaohengyuan1/Color2Embed
