@@ -121,14 +121,14 @@ Once you've set up the environment, several things need to be done before colori
    ```
    Colorful-Manga-GAN
       	|- experiments
-      		|- Color2Manga_gray
-      			|- xxx000_gray.pt
-          	|- Color2Manga_sketch
-          		|- xxx000_sketch.pt
-   		|- Discriminator
-   			|- xxx000_d.pt
-   		|- VGG19
-   			|- vgg19-dcbb9e9d.pth
+             |- Color2Manga_gray
+                   |- xxx000_gray.pt
+             |- Color2Manga_sketch
+                   |- xxx000_sketch.pt
+             |- Discriminator
+                   |- xxx000_d.pt
+             |- VGG19
+                   |- vgg19-dcbb9e9d.pth
    ```
 
 ### Quick test
