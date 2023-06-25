@@ -22,16 +22,8 @@ Another part is a U-net-like network. The encoder layer extracts `content embedd
 <p align="left">
   <img src="./assets/PFFB.png">
 </p>  
-<center>
-    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
-    display: inline-block;
-    color: #999;
-    padding: 2px;">
-          From  “Color2Embed: Fast Exemplar-Based Image Colorization using Color Embeddings.”
-    </div>
-</center>
-
-The figure shows how PFFB works. It generates a filter by applying color embedding, and then convolving with content features. Check this [paper](https://arxiv.org/abs/2106.08017) for details. 
+The figure shows how PFFB works. 
+It generates a filter by applying color embedding, and then convolving with content features. The figure is from this [paper](https://arxiv.org/abs/2106.08017) and check it for more details. 
 
 ### Discriminator 
 
