@@ -77,11 +77,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.path:
-        ckpt_path = args.path
+        test_dir_path = args.path
     if args.size:
         imgsize = args.size
     if args.ckpt:
-        test_dir_path = args.ckpt
+        ckpt_path = args.ckpt
     if args.no_extractor:
         no_extractor = args.no_extractor
 
